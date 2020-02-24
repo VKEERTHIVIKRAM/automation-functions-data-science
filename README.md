@@ -16,7 +16,7 @@ Summary conatins
 -Ouliers presence and percentage
 -First,second and third value
 -Entropy
-#### 2. def df_summary_specific(df,target=None,missing_only='no',impossible_only='no',outliers_only='no'):
+#### 2. def df_summary_specific(df,target=None,num_but_cat_list=[],missing_only='no',impossible_only='no',outliers_only='no'):
 Similar to df_summary. However you can choose to see only rows with missing values/impossible values/outliers
 #### 3. def corr_matrix(df,annot=True):
 Returns a neater version of the heatmap of a correlation matrix of a dataframe
