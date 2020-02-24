@@ -136,18 +136,50 @@ def  df_summary(df,target=None,num_but_cat_list=[],missing_only='no',impossible_
     else:
         raise ValueError('Can only input yes or no')
     return d
-                                        
+
+def optimized_n_cluster_value(df,range_min=2,range_max=10,random_state=3):
+    """Get the optimized n_cluster value for use in KMeans
+       Parameters-
+       df : DataFrame
+       range_min : n_cluster value to start at. Default=1
+       range_max : n_cluster value to end at. Default=10
+       random_state : The random_state value. Default=3
+       Returns-
+       Plot of No. of Clusters vs SSD and Plot of No. of Clusters vs Silhouette Score
+       From these plots We can infer n_cluster value """
+    import matplotlib.pyplot as plt
+    from sklearn.cluster import KMeans
+    from sklearn.metrics import silhouette_score
+    ssd=[]
+    sscore=[]
+    for k in range(range_min,range_max):
+        kmeans= KMeans(n_clusters=k,random_state=random_state,n_jobs=-1)
+        kmeans.fit(df)
+        ssd.append(kmeans.inertia_)
+        ss=silhouette_score(df,kmeans.labels_)
+        sscore.append(ss)
+    plt.plot(range(range_min,range_max),ssd,'r-') 
+    plt.xlabel('No. of Clusters')
+    plt.ylabel('SSD')
+    plt.title('Graph of No. of Clusters vs SSD')
+    plt.show()
+    plt.plot(range(range_min,range_max),sscore,'r-') 
+    plt.xlabel('No. of Clusters')
+    plt.ylabel('Silhouette Score')
+    plt.title('Graph of No. of Clusters vs Silhouette Score ')
+    plt.show()
+                                            
     
 
 
-def svisualizer(x, ncluster):
+def svisualizer(x, ncluster,random_state=3):
     import matplotlib.pyplot as plt
     from sklearn.cluster import KMeans
     import numpy as np
     from matplotlib import cm
     from sklearn.metrics import silhouette_samples 
 
-    km = KMeans(n_clusters=ncluster, init='k-means++', n_init=10, max_iter=300, tol=1e-04, random_state=0)
+    km = KMeans(n_clusters=ncluster, init='k-means++', n_init=10, max_iter=300, tol=1e-04, random_state=random_state)
     y_km = km.fit_predict(x)
 
     cluster_labels = np.unique(y_km)
@@ -177,12 +209,12 @@ def svisualizer(x, ncluster):
     plt.show()	
 
 
-def cluster_plot(data, nclusters):
+def cluster_plot(data, nclusters,random_state=3):
     from sklearn.cluster import KMeans
     import matplotlib.pyplot as plt
     X = data.copy()
 
-    km = KMeans(n_clusters=nclusters, init='random', n_init=10, max_iter=300, tol=1e-04, random_state=0)
+    km = KMeans(n_clusters=nclusters, init='random', n_init=10, max_iter=300, tol=1e-04, random_state=random_state)
     y_km = km.fit_predict(X)
 
 
