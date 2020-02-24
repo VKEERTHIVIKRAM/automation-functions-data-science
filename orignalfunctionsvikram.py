@@ -1,8 +1,11 @@
-def  df_summary(df,target=None,num_but_cat_list=[]):
+def  df_summary(df,target=None,num_but_cat_list=[],missing_only='no',impossible_only='no',outliers_only='no'):
     """ Parameters-
         df : DataFrame
         target : Target varaible of the data set. If given will not calculate for it
         num_but_cat_list : These are numerical but we will consider them as categorical
+        only_missing : 'yes' or 'no'. Default is 'no'
+        only_impossible : 'yes' or 'no'. Default is 'no'
+        only_outliers : 'yes' or 'no'.  Default is 'no'
         Returns:
         Summary of table(Impossible values may show wrong in case of column inherently
         containing and requiring special characters.When missing values are present sometimes(very less chance)
@@ -14,11 +17,10 @@ def  df_summary(df,target=None,num_but_cat_list=[]):
         4.Number of unique values
         5.Range
         6.Mean,Median,Mode value and which imputaion method should be used if needed
-        7.Dtypes
-        8.Impossible values presence and percentage
-        9.Ouliers presence and percentage
-        10.First,second and third value
-        11.Entropy"""
+        7.Impossible values presence and percentage
+        8.Ouliers presence and percentage
+        9.First,second and third value
+        10.Entropy"""
     import pandas as pd
     import re
     from scipy import stats
@@ -114,38 +116,7 @@ def  df_summary(df,target=None,num_but_cat_list=[]):
     for name in summary['Name'].value_counts().index:
         summary.loc[summary['Name'] == name, 'Entropy'] = round(stats.entropy(dfn[name].value_counts(normalize=True), base=2),2) 
     summary.style.set_properties(subset=['Name'],**{'font-weight': 'bold'})
-    return summary
-                                        
-
-def df_summary_specific(df,target=None,num_but_cat_list=[],missing_only='no',impossible_only='no',outliers_only='no'):
-    """ Parameters-        
-        only_missing : 'yes' or 'no'. Default is 'no'
-        only_impossible : 'yes' or 'no'. Default is 'no'
-        only_outliers : 'yes' or 'no'.  Default is 'no'
-        Can combine above 3 parameters without error
-        Returns:
-        Specific Summary of table(Impossible values may show wrong in case of column inherently
-        containing and requiring special characters.When missing values are present sometimes(very less chance)
-        will also show impossible values as present.
-        Summary conatins 
-        1.Name and Total count
-        2.Dtypes 
-        3.Missing values number and percentage
-        4.Number of unique values
-        5.Range
-        6.Mean,Median,Mode value and which imputaion method should be used if needed
-        7.Dtypes
-        8.Impossible values presence and percentage
-        9.Ouliers presence and percentage
-        10.First,second and third value
-        11.Entropy)"""
-    if target!=None and target in df.columns:
-        dfn=df.drop(labels=target,axis=1)
-    elif target==None:
-        dfn=df
-    else:
-        raise ValueError('Target column inputed not in DataFrame')
-    a=df_summary(dfn,num_but_cat_list=num_but_cat_list)
+    a=summary
     if missing_only=='yes':
         b=a[a['Missing']!=0]
     elif missing_only=='no':
@@ -164,7 +135,9 @@ def df_summary_specific(df,target=None,num_but_cat_list=[],missing_only='no',imp
         d=c
     else:
         raise ValueError('Can only input yes or no')
-    return d            
+    return d
+                                        
+    
 
 
 def svisualizer(x, ncluster):
