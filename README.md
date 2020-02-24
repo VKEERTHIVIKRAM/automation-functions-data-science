@@ -35,3 +35,5 @@ Performs Backward selection on the data
 Performs Step-wise selection on the data 
 #### 10. def column_may_be_categorical(df,target=None,threshold=10):
 Returns column which could be considred as categorical for analysis but is numerical in nature
+#### 11. def optimized_n_cluster_value(df,range_min=2,range_max=10,random_state=3):
+Plot of No. of Clusters vs SSD and Plot of No. of Clusters vs Silhouette Score. From these plots We can infer n_cluster value
